@@ -1,10 +1,8 @@
-import numpy as np
 import pandas as pd
 from bs4 import BeautifulSoup
 import re
 from selenium import webdriver
-import matplotlib.pyplot as plt
-#need html5,bs4,lxml,requests,pandas,numpy for webscraping,selenium,webdriver
+import plotly.express as px
 
 url_current = 'https://lolalytics.com/lol/tierlist/'
 url_16_10 = 'https://lolalytics.com/lol/tierlist/?patch=16.10'
@@ -84,4 +82,11 @@ all_champs_df["games"] = all_champs_df["games"].str.replace(",", "").astype(int)
 cols = ["lane_pickrate","pickrate","banrate"]
 all_champs_df[cols] = all_champs_df[cols].astype(float)
 all_champs_df["PBI"] = all_champs_df["PBI"].astype(int)
-print(all_champs_df)
+
+#interactive scatter plot with names
+fig = px.scatter(all_champs_df, x="games",y="winrate",hover_name="name")
+fig.show()
+
+
+#export as excel (will save to whatever directory)
+#all_champs_df.to_excel("lolalytics_tierlist.xlsx") #uncomment to save
