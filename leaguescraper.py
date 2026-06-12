@@ -1,13 +1,9 @@
 import numpy as np
 import pandas as pd
-import requests
 from bs4 import BeautifulSoup
 import re
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-import time
+import matplotlib.pyplot as plt
 #need html5,bs4,lxml,requests,pandas,numpy for webscraping,selenium,webdriver
 
 url_current = 'https://lolalytics.com/lol/tierlist/'
@@ -21,11 +17,9 @@ driver = webdriver.Chrome()
 driver.get(url_current)
 #establish waiting strategy to make sure entire page is loaded
 #lazy scroll way(execute javascript to scroll)
-last_height = driver.execute_script("return document.body.scrollHeight")
-
 while True:
     #tried implementing sleep after each scroll but found that just no sleep but gradual scroll like a human will load everything
-    driver.execute_script("window.scrollBy(0, 500);")
+    driver.execute_script("window.scrollBy(0, 400);")
     #innerHeight for visible webpage length, scrollY for how much has been scrolled, document.body.scrollHeight for entire height of webpage including not loaded content
     at_bottom = driver.execute_script("""
         return (window.innerHeight + window.scrollY) >= document.body.scrollHeight
@@ -77,4 +71,17 @@ for i,div in enumerate(individual_champs):
     })
 
 all_champs_df = pd.DataFrame(full_data)
+all_champs_df["winrate"] = all_champs_df["winrate"]
+#cleaning data to take out WR variance and use it to make another column
+#location to insert new column
+winrate_pos = all_champs_df.columns.get_loc("winrate") + 1
+#inserting wr variance
+all_champs_df.insert(winrate_pos, "WR_var_apextier", all_champs_df["winrate"].str.extract(r"([+-]\d+\.\d+)").astype(float))
+#clean winrate
+all_champs_df["winrate"] = all_champs_df["winrate"].str.split(r"[+-]").str[0].str.strip().astype(float)
+#clean games to remove comma and convert to float
+all_champs_df["games"] = all_champs_df["games"].str.replace(",", "").astype(int)
+cols = ["lane_pickrate","pickrate","banrate"]
+all_champs_df[cols] = all_champs_df[cols].astype(float)
+all_champs_df["PBI"] = all_champs_df["PBI"].astype(int)
 print(all_champs_df)
