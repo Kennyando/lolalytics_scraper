@@ -87,6 +87,5 @@ all_champs_df["PBI"] = all_champs_df["PBI"].astype(int)
 fig = px.scatter(all_champs_df, x="games",y="winrate",hover_name="name")
 fig.show()
 
-
 #export as excel (will save to whatever directory)
 #all_champs_df.to_excel("lolalytics_tierlist.xlsx") #uncomment to save
