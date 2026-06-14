@@ -5,23 +5,23 @@ this is a short project to scrape the data from https://lolalytics.com/lol/tierl
 
 -Running the project (run the line under each step in the terminal)
 1. clone repository
-'''bash
+'''sh
 git clone https://github.com/Kennyando/lolalytics_scraper.git
 cd lolalytics_scraper.git
 '''
 2. creating virtual env
-'''bash
+'''sh
 python -m venv .venv
 '''
 3. activating virtual env
-'''bash
+'''sh
 .venv\Scripts\activate
 '''
 4. installing library dependencies
-'''bash
+'''sh
 pip install -r requirements.txt
 '''
 5. running the program
-'''bash
+'''sh
 python lolalytics_scraper.py
 '''
